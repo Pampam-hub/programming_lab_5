@@ -1,51 +1,140 @@
 package ru.itmo.lab.repository;
 
-import java.util.Comparator;
-import java.util.List;
+import ru.itmo.lab.entity.Dragon;
+import ru.itmo.lab.repository.exceptions.EntityNotFoundException;
+import ru.itmo.lab.service.commands.Command;
 
-public class TreeMapStorage<T, U> implements Storage{
-    @Override
-    public <T>T save(T entity) {
+import java.util.*;
 
+public class DragonTreeMapStorage implements Storage<Dragon, Integer> {
+    // подумать над айдишником
+    private Integer counter = 0;
+    private final Map< Integer, Dragon > dragonTreeMap = new TreeMap<>();
+    private final Map< String, Command > help = new HashMap<>();
+    private final Deque<Command> history = new ArrayDeque();
+    private List<Dragon> dragons;
+
+    DragonTreeMapStorage(Command helpCommand,
+                         Command infoCommand,
+                         Command showCommand,
+                         Command insertCommand,
+                         Command updateCommand,
+                         Command removeKeyCommand,
+                         Command clearCommand,
+                         Command saveCommand,
+                         Command executeScriptCommand,
+                         Command exitCommand,
+                         Command removeLowerCommand,
+                         Command historyCommand,
+                         Command removeLowerKeyCommand,
+                         Command minByAgeCommand,
+                         Command filterGreaterThanTypeCommand,
+                         Command printFieldDescendingCommand) {
+        help.put(helpCommand.getName(), helpCommand);
+        help.put(infoCommand.getName(), infoCommand);
+        help.put(showCommand.getName(), showCommand);
+        help.put(insertCommand.getName(), insertCommand);
+        help.put(updateCommand.getName(), updateCommand);
+        help.put(removeKeyCommand.getName(), removeKeyCommand);
+        help.put(clearCommand.getName(), clearCommand);
+        help.put(saveCommand.getName(), saveCommand);
+        help.put(executeScriptCommand.getName(),
+                executeScriptCommand);
+        help.put(exitCommand.getName(), exitCommand);
+        help.put(removeLowerCommand.getName(),
+                removeLowerCommand);
+        help.put(historyCommand.getName(), historyCommand);
+        help.put(removeLowerKeyCommand.getName(),
+                removeKeyCommand);
+        help.put(minByAgeCommand.getName(), minByAgeCommand);
+        help.put(filterGreaterThanTypeCommand.getName(),
+                filterGreaterThanTypeCommand);
+        help.put(printFieldDescendingCommand.getName(),
+                printFieldDescendingCommand);
     }
 
     @Override
-    public Object save(Object entity) {
-        return null;
+    public Dragon save(Dragon entity) {
+        entity.setId(counter);
+        dragonTreeMap.put(counter++, entity);
+        return entity;
     }
 
     @Override
-    public Object read(Object id) {
-        return null;
+    public Dragon read(Integer id)
+            throws EntityNotFoundException {
+        Dragon dragon = dragonTreeMap.get(id);
+        if(dragon == null) {
+            throw new EntityNotFoundException(Dragon.class, id);
+        }
+        return dragon;
     }
 
     @Override
-    public Object update(Object entity) {
-        return null;
+    public Dragon update(Integer id, Dragon entity)
+            throws EntityNotFoundException {
+        if(!dragonTreeMap.containsKey(id)) {
+            throw new EntityNotFoundException(Dragon.class, id);
+        }
+        dragonTreeMap.replace(id, entity);
+        return dragonTreeMap.get(id);
     }
 
     @Override
-    public boolean remove(Object entity) {
+    public boolean remove(Integer id)
+            throws EntityNotFoundException{
+        if(!dragonTreeMap.containsKey(id)) {
+            throw new EntityNotFoundException(Dragon.class, id);
+        }
+        dragonTreeMap.remove(id);
+        return true;
+    }
+
+    @Override
+    public boolean removeLower(Integer id)
+            throws EntityNotFoundException {
+        if(!dragonTreeMap.containsKey(id)) {
+            throw new EntityNotFoundException(Dragon.class, id);
+        }
+        for(Integer i=0; i < id; i++)
+            dragonTreeMap.remove(i);
+        return true;
+    }
+
+    @Override
+    public boolean removeAll() {
+        dragonTreeMap.clear();
         return false;
     }
 
     @Override
-    public boolean remove(List entities) {
-        return false;
+    public List<Dragon> readAll() {
+        return new ArrayList<>(dragonTreeMap.values());
     }
 
     @Override
-    public List readAll() {
-        return null;
+    public Dragon min(Comparator<Dragon> com) {
+        List<Dragon> listHelper
+                = new ArrayList<>(dragonTreeMap.values());
+        listHelper.sort(com);
+        return listHelper.get(listHelper.size()-1);
     }
 
     @Override
-    public List findLower(Comparator com) {
-        return null;
+    public void sortDragons(Comparator<Dragon> com) {
+        List<Dragon> listHelper
+                = new ArrayList<>(dragonTreeMap.values());
+        listHelper.sort(com);
+        dragons = listHelper;
     }
 
     @Override
-    public Object min(Comparator com) {
-        return null;
+    public void addHistory(Command command) {
+        int numElements = 12;
+        if(history.size() == numElements) {
+            history.removeFirst();
+        }
+        history.offerLast(command);
     }
+
 }

@@ -1,19 +1,23 @@
-package ru.itmo.lab.repsitory;
+package ru.itmo.lab.repository;
+
+import ru.itmo.lab.entity.Dragon;
+import ru.itmo.lab.repository.exceptions.EntityNotFoundException;
+import ru.itmo.lab.service.commands.Command;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 public interface Storage<T, U> {
     T save(T entity);
-
-    T read(U id);
-
-    T update(T entity);
-
-    boolean remove(T entity);
-
+    T read(U id) throws EntityNotFoundException;
+    T update(U id, T entity) throws EntityNotFoundException;
+    boolean remove(U id) throws EntityNotFoundException;
+    boolean removeLower(U id) throws EntityNotFoundException;
+    // if work with clients we need clientName to removeAll
+    boolean removeAll();
     List<T> readAll();
-
-    <C> T min(Comparator<C> com);
-
+    T min(Comparator< Dragon> com);
+    void sortDragons(Comparator<Dragon> com);
+    void addHistory(Command command);
 }

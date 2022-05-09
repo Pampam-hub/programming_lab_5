@@ -2,18 +2,23 @@ package ru.itmo.lab.service.commands;
 
 import ru.itmo.lab.repository.Storage;
 import ru.itmo.lab.service.CommandStatus;
+import ru.itmo.lab.service.validator.DragonValidator;
 
-import java.util.Map;
 
-public class Clear extends Command {
-    public Clear() {
+public class ClearCommand extends Command {
+    public ClearCommand() {
         super("clear","clear all collection",
                 "arguments aren't needed");
     }
 
     @Override
-    public CommandResult execute(Storage storage, Map<String, String> mapArgs) {
-        storage.removeAll();
-        return new CommandResult("collection has been cleared", CommandStatus.SUCCESSFUL);
+    public CommandResult execute(Storage storage, String[] args) {
+        try {
+            DragonValidator.validatingNumberOfArgs(args, getArgs().size());
+            storage.removeAll();
+            return new CommandResult("collection has been cleared", CommandStatus.SUCCESSFUL);
+        } catch (IllegalArgumentException e) {
+            return new CommandResult(e.getMessage(), CommandStatus.UNSUCCESSFUL);
+        }
     }
 }

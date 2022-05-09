@@ -1,2 +1,5 @@
-package ru.itmo.lab.repository.generators;public class Generator {
+package ru.itmo.lab.repository.generators;
+
+public class Generator {
+
 }
