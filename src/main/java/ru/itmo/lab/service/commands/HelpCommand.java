@@ -1,4 +1,6 @@
-package ru.itmo.lab.servise.commands;
+package ru.itmo.lab.serviсe.commands;
+
+import ru.itmo.lab.repository.Storage;
 
 import java.util.Map;
 
@@ -11,7 +13,7 @@ public class HelpCommand extends Command {
 
     // DIY lib
     @Override
-    public CommandResult execute(Map<String, String> mapArgs) {
+    public CommandResult execute(Storage storage, Map<String, String> mapArgs) {
         return null;
     }
 }
