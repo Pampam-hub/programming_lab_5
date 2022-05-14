@@ -1,4 +1,4 @@
-package ru.itmo.lab.repository.handlers;
+package ru.itmo.lab.service.handlers;
 
 import ru.itmo.lab.entity.Dragon;
 import ru.itmo.lab.repository.factories.Factory;
@@ -12,11 +12,11 @@ import java.util.List;
 public class FileChecker {
 
     public static void checkFile(String filePath) throws FileNotFoundException {
-        boolean flag = false;
+
         File file = new File(filePath);
         if(!file.exists()) {
             throw new FileNotFoundException("file not found");
-        } else if(!file.isDirectory()) {
+        } else if(file.isDirectory()) {
             throw new FileNotFoundException("it isn't a file, it's a directory");
         } else if(!file.canRead()) {
             throw new FileNotFoundException("no read  access");
@@ -31,12 +31,14 @@ public class FileChecker {
 
         for (Dragon dragon : dragons) {
             try {
-                if (ids.indexOf(dragon.getId()) != -1) {
+                if (ids.contains(dragon.getId())) {
                     throw new IllegalArgumentException("the input collection has elements with equal id");
-                } else {
+               } else {
                     ids.add(dragon.getId());
                     maxId = Math.max(maxId, dragon.getId());
                 }
+
+
                 Factory factory = new FileDragonFactory(dragon);
                 factory.generateDragonData();
             } catch (IllegalArgumentException e) {
@@ -46,5 +48,7 @@ public class FileChecker {
         }
 
         dragons[0].setIdCounter(++maxId);
+
+
     }
 }

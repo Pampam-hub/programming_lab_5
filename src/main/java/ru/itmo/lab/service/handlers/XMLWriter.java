@@ -1,7 +1,6 @@
-package ru.itmo.lab.repository.handlers;
+package ru.itmo.lab.service.handlers;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.security.AnyTypePermission;
 import ru.itmo.lab.entity.Dragon;
 
 import java.io.IOException;

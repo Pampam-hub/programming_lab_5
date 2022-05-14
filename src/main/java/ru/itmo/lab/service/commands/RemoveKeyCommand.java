@@ -3,7 +3,7 @@ package ru.itmo.lab.service.commands;
 import ru.itmo.lab.repository.Storage;
 import ru.itmo.lab.repository.exceptions.EntityNotFoundException;
 import ru.itmo.lab.service.CommandStatus;
-import ru.itmo.lab.service.validator.DragonValidator;
+import ru.itmo.lab.service.handlers.DragonValidator;
 
 
 public class RemoveKeyCommand extends Command {
@@ -16,7 +16,7 @@ public class RemoveKeyCommand extends Command {
     public CommandResult execute(Storage storage, String[] args)
             throws EntityNotFoundException {
         try {
-            DragonValidator.validatingNumberOfArgs(args, getArgs().size());
+            DragonValidator.validateNumberOfArgs(args, getArgs().size());
             storage.remove(args[1]);
             return new CommandResult("the removal has been completed",
                     CommandStatus.SUCCESSFUL);

@@ -1,40 +1,72 @@
 package ru.itmo.lab.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import java.time.LocalDateTime;
 
+
+@XStreamAlias("dragon")
 public class Dragon {
-    // Поле не может быть nul, Значение > 0, уникальное,
-    // генерируется автоматически
+
+    @XStreamAlias("id")
     private Integer id;
-    // Поле не может быть null, != empty
+
+    @XStreamAlias("name")
     private String name;
-    // Поле не может быть null
+
+    @XStreamAlias("coordinates")
     private Coordinates coordinates;
     // Поле не может быть null, значение генерируется автоматически
+
+    @XStreamAlias("creationDate")
     private java.time.LocalDateTime creationDate;
     // Значение поля > 0, поле не может быть null
+    @XStreamAlias("age")
     private Integer age;
-    public final static Integer MAX_AGE = Integer.MAX_VALUE;
     // Значение поля > 0
+    @XStreamAlias("wingspan")
     private int wingspan;
-    public final static int MAX_WINGSPAN = Integer.MAX_VALUE;
     // Поле не может быть null
+    @XStreamAlias("dragonType")
     private DragonType type;
     // Поле не может быть null
-    private DragonCharacter character;
-    private DragonHead head;
+    @XStreamAlias("dragonCharacter")
+    private DragonCharacter dragonCharacter;
+    @XStreamAlias("dragonHead")
+    private DragonHead dragonHead;
+    /**
+     * Счетчик id элементов, служит для обеспечения уникальности поля id у каждого элемента
+     */
+    private static Integer idCounter = 1;
 
+    public Dragon() {
+        setId();
+        creationDate = LocalDateTime.now();
+    }
     public Dragon(String name, Integer age) {
         this.name = name;
         this.age = age;
     }
 
+    public void setId() {
+        this.id = idCounter++;
+    }
+
+    /**
+     * Метод, возвращающий значение поля id у текущего элемента коллекции
+     *
+     * @return id дракона
+     */
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Integer getIdCounter() {
+        return idCounter;
+    }
+
+    public void setIdCounter(Integer id) {
+        idCounter = id;
     }
 
     public String getName() {
@@ -61,6 +93,10 @@ public class Dragon {
         this.creationDate = creationDate;
     }
 
+    public void setCreationDate() {
+        creationDate = LocalDateTime.now();
+    }
+
     public Integer getAge() {
         return age;
     }
@@ -85,20 +121,20 @@ public class Dragon {
         this.type = type;
     }
 
-    public DragonCharacter getCharacter() {
-        return character;
+    public DragonCharacter getDragonCharacter() {
+        return dragonCharacter;
     }
 
-    public void setCharacter(DragonCharacter character) {
-        this.character = character;
+    public void setCharacter(DragonCharacter dragonCharacter) {
+        this.dragonCharacter = dragonCharacter;
     }
 
-    public DragonHead getHead() {
-        return head;
+    public DragonHead getDragonHead() {
+        return dragonHead;
     }
 
-    public void setHead(DragonHead head) {
-        this.head = head;
+    public void setDragonHead(DragonHead dragonHead) {
+        this.dragonHead = dragonHead;
     }
 
     @Override
@@ -106,13 +142,13 @@ public class Dragon {
         return "Dragon{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", coordinates=" + coordinates +
+                ", " + coordinates +
                 ", creationDate=" + creationDate +
                 ", age=" + age +
                 ", wingspan=" + wingspan +
                 ", type=" + type +
-                ", character=" + character +
-                ", head=" + head +
+                ", dragonCharacter=" + dragonCharacter +
+                ", " + dragonHead +
                 '}';
     }
 }

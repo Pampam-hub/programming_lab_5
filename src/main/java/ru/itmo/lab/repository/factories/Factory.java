@@ -1,2 +1,5 @@
-package ru.itmo.lab.repository.factories;public interface Factory {
+package ru.itmo.lab.repository.factories;
+
+public interface Factory {
+    void generateDragonData();
 }

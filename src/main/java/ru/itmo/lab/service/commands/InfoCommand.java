@@ -2,7 +2,7 @@ package ru.itmo.lab.service.commands;
 
 import ru.itmo.lab.repository.Storage;
 import ru.itmo.lab.service.CommandStatus;
-import ru.itmo.lab.service.validator.DragonValidator;
+import ru.itmo.lab.service.handlers.DragonValidator;
 
 
 public class InfoCommand extends Command{
@@ -14,7 +14,7 @@ public class InfoCommand extends Command{
     @Override
     public CommandResult execute(Storage storage, String[] args) {
         try {
-            DragonValidator.validatingNumberOfArgs(args, getArgs().size());
+            DragonValidator.validateNumberOfArgs(args, getArgs().size());
             storage.readAll();
             return new CommandResult("here you're collection", CommandStatus.SUCCESSFUL);
         } catch (IllegalArgumentException e) {

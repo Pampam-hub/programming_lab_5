@@ -1,40 +1,29 @@
 package ru.itmo.lab;
 
-import ru.itmo.lab.entity.Dragon;
-import ru.itmo.lab.repository.DragonTreeMapStorage;
-import ru.itmo.lab.repository.comparators.DragonAgeComparator;
-import ru.itmo.lab.repository.exceptions.EntityNotFoundException;
-import ru.itmo.lab.service.commands.ClearCommand;
-import ru.itmo.lab.service.commands.Command;
 
-import java.util.*;
+import ru.itmo.lab.repository.DragonTreeMapStorage;
+import ru.itmo.lab.repository.Storage;
+import ru.itmo.lab.service.handlers.FileChecker;
+import ru.itmo.lab.service.handlers.XMLReader;
+
+import java.io.*;
+
 
 public class Application {
-    public static void main(String[] args) throws EntityNotFoundException {
-        /*
-        List<Integer> ints = new ArrayList<>();
-        ints.add(1);
-        ints.add(2);
-        List<? super Number> nums = Collections.singletonList(ints);
-        nums.add(1);
-        System.out.println(nums);
-        */
-        /*
-        Map<Integer, Dragon> map = new TreeMap<>();
-        map.put(1,new Dragon("pum", 1));
-        map.put(2,new Dragon("piu", 100));
-        map.put(4,new Dragon("bi", 30));
-        Map<String, String> arg = new HashMap<>();
-        DragonAgeComparator comparator = new DragonAgeComparator();
-        */
+    public static void main(String[] args) throws IOException {
 
-        Deque<Integer> dequeue = new ArrayDeque<>();
-        dequeue.addLast(1);
-        dequeue.addLast(2);
-        dequeue.addLast(3);
-        dequeue.addLast(7);
-        System.out.println(dequeue);
-        System.out.println(dequeue.size());
+        String file = System.getenv("DATA_FILEPATH");
+
+        try {
+            FileChecker.checkFile(file);
+            Storage storage = new DragonTreeMapStorage();
+            XMLReader.readFromXML(file, storage);
+            System.out.println("\nCollection from file was add successfully");
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
 }

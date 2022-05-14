@@ -1,17 +1,21 @@
 package ru.itmo.lab.repository.factories;
 
 import ru.itmo.lab.entity.*;
-import ru.itmo.lab.repository.validator.DragonValidator;
+import ru.itmo.lab.service.handlers.DragonValidator;
 
 import java.util.Scanner;
 
-public class DragonFactory extends Factory {
+public class ConsoleDragonFactory implements Factory {
+    private Dragon dragon;
+    private Scanner scanner;
 
-    public DragonFactory(Scanner scanner) {
-        super(scanner);
+    public ConsoleDragonFactory(Scanner scanner) {
+        this.scanner = scanner;
+        dragon = new Dragon();
     }
 
-    void generateDragonData() {
+    @Override
+    public void generateDragonData() {
         setValue("Enter dragon name:", this::setName);
         setValue("Enter x coordinate, value must be an integer", this::setX);
         setValue("Enter y coordinate, value must be a number", this::setY);
@@ -41,70 +45,81 @@ public class DragonFactory extends Factory {
     }
 
     void setName() throws IllegalArgumentException {
-        DragonValidator<String> dragonValidator = new DragonValidator<>(super.scanner);
-        dragonValidator.validatingNull(false);
-        super.name = dragonValidator.getValue();
+        DragonValidator<String> dragonValidator = new DragonValidator<>(scanner);
+        dragonValidator.validateNull(false);
+        dragon.setName(dragonValidator.getValue());
     }
 
     void setX() throws IllegalArgumentException {
-        DragonValidator<Long> dragonValidator = new DragonValidator<>(super.scanner);
-        dragonValidator.validatingNull(false);
-        dragonValidator.validatingFunction(Long::parseLong,
+        DragonValidator<Long> dragonValidator = new DragonValidator<>(scanner);
+        dragonValidator.validateNull(false);
+        dragonValidator.validateFunction(Long::parseLong,
                 "value of x must be an integer");
-        super.x = dragonValidator.getValue();
+        Coordinates coordinates = dragon.getCoordinates();
+        coordinates.setX(dragonValidator.getValue());
+        dragon.setCoordinates(coordinates);
     }
 
     void setY() throws IllegalArgumentException {
-        DragonValidator<Float> dragonValidator = new DragonValidator<>(super.scanner);
-        dragonValidator.validatingNull(false);
-        dragonValidator.validatingFunction(Float::parseFloat,
+        DragonValidator<Float> dragonValidator = new DragonValidator<>(scanner);
+        dragonValidator.validateNull(false);
+        dragonValidator.validateFunction(Float::parseFloat,
                 "value of y must be a number");
-        super.y = dragonValidator.getValue();
+        Coordinates coordinates = dragon.getCoordinates();
+        coordinates.setY(dragonValidator.getValue());
+        dragon.setCoordinates(coordinates);
     }
 
     void setAge() throws IllegalArgumentException {
-        DragonValidator<Integer> dragonValidator = new DragonValidator<>(super.scanner);
-        dragonValidator.validatingNull(false);
-        dragonValidator.validatingFunction(Integer::parseInt,
+        DragonValidator<Integer> dragonValidator = new DragonValidator<>(scanner);
+        dragonValidator.validateNull(false);
+        dragonValidator.validateFunction(Integer::parseInt,
                 "value of age must be an integer ");
-        dragonValidator.validatingPredicate(arg -> (int) arg > 0,
+        dragonValidator.validatePredicate(arg -> (int) arg > 0,
                 "value of age must be a positive");
-        super.age = dragonValidator.getValue();
+        dragon.setAge(dragonValidator.getValue());
     }
 
     void setWingspan() throws IllegalArgumentException {
-        DragonValidator<Integer> dragonValidator = new DragonValidator<>(super.scanner);
-        dragonValidator.validatingNull(false);
-        dragonValidator.validatingFunction(Integer::parseInt,
+        DragonValidator<Integer> dragonValidator = new DragonValidator<>(scanner);
+        dragonValidator.validateNull(false);
+        dragonValidator.validateFunction(Integer::parseInt,
                 "value of wingspan must be an integer ");
-        dragonValidator.validatingPredicate(arg -> (int) arg > 0,
+        dragonValidator.validatePredicate(arg -> (int) arg > 0,
                 "value of age must be a positive");
-        super.wingspan = dragonValidator.getValue();
+        dragon.setWingspan(dragonValidator.getValue());
     }
 
     void setDragonType() throws IllegalArgumentException {
-        DragonValidator<DragonType> dragonValidator = new DragonValidator<>(super.scanner);
-        dragonValidator.validatingNull(false);
-        dragonValidator.validatingFunction(DragonType::valueOf, "value of dragon type " +
+        DragonValidator<DragonType> dragonValidator = new DragonValidator<>(scanner);
+        dragonValidator.validateNull(false);
+        dragonValidator.validateFunction(DragonType::valueOf, "value of dragon type " +
                 "must be from list " + DragonType.show() + " letter case must be the same");
-        super.dragonType = dragonValidator.getValue();
+        dragon.setType(dragonValidator.getValue());
     }
 
     void setDragonCharacter() throws IllegalArgumentException {
-        DragonValidator<DragonCharacter> dragonValidator = new DragonValidator<>(super.scanner);
-        dragonValidator.validatingNull(false);
-        dragonValidator.validatingFunction(DragonCharacter::valueOf, "value of dragon character " +
+        DragonValidator<DragonCharacter> dragonValidator = new DragonValidator<>(scanner);
+        dragonValidator.validateNull(false);
+        dragonValidator.validateFunction(DragonCharacter::valueOf, "value of dragon character " +
                 "must be from list " + DragonType.show() + " letter case must be the same");
-        super.dragonCharacter = dragonValidator.getValue();
+        dragon.setCharacter(dragonValidator.getValue());
     }
 
     void setEyesCount() throws IllegalArgumentException {
-        DragonValidator<Double> dragonValidator = new DragonValidator<>(super.scanner);
-        dragonValidator.validatingNull(true);
-        dragonValidator.validatingFunction(Double::parseDouble, "count of dragon eyes " +
+        DragonValidator<Double> dragonValidator = new DragonValidator<>(scanner);
+        dragonValidator.validateNull(true);
+        dragonValidator.validateFunction(Double::parseDouble, "count of dragon eyes " +
                 "must be a number ");
-        dragonValidator.validatingPredicate(arg -> (int) arg > 0,
+        dragonValidator.validatePredicate(arg -> (int) arg > 0,
                 "count of eyes must be a positive");
-        super.eyesCount = dragonValidator.getValue();
+        DragonHead dragonHead = dragon.getDragonHead();
+        dragonHead.setEyesCount(dragonValidator.getValue());
+        dragon.setDragonHead(dragonHead);
     }
+
+    Dragon getDragon() {
+        return dragon;
+    }
+
 }

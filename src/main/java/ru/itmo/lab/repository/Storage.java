@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface Storage<T, U> {
-    T save(T entity);
+    Dragon save(Dragon entity);
+
+    // T save(T entity);
     T read(U id) throws EntityNotFoundException;
     T update(U id, T entity) throws EntityNotFoundException;
     boolean remove(U id) throws EntityNotFoundException;
@@ -18,6 +20,6 @@ public interface Storage<T, U> {
     boolean removeAll();
     List<T> readAll();
     T min(Comparator< Dragon> com);
-    void sortDragons(Comparator<Dragon> com);
+    List<T> sortDragons(Comparator<Dragon> com);
     void addHistory(Command command);
 }

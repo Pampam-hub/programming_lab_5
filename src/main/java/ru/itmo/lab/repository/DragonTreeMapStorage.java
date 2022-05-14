@@ -4,32 +4,39 @@ import ru.itmo.lab.entity.Dragon;
 import ru.itmo.lab.repository.exceptions.EntityNotFoundException;
 import ru.itmo.lab.service.commands.Command;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class DragonTreeMapStorage implements Storage<Dragon, Integer> {
     // подумать над айдишником
-    private Integer counter = 0;
-    private final Map< Integer, Dragon > dragonTreeMap = new TreeMap<>();
+    private final Map< Integer, Dragon > dragonTreeMap;
     private final Map< String, Command > help = new HashMap<>();
-    private final Deque<Command> history = new ArrayDeque();
-    private List<Dragon> dragons;
+    private final Deque<Command> history = new ArrayDeque<>();
+    private LocalDate dateOfInitialization;
 
-    DragonTreeMapStorage(Command helpCommand,
-                         Command infoCommand,
-                         Command showCommand,
-                         Command insertCommand,
-                         Command updateCommand,
-                         Command removeKeyCommand,
-                         Command clearCommand,
-                         Command saveCommand,
-                         Command executeScriptCommand,
-                         Command exitCommand,
-                         Command removeLowerCommand,
-                         Command historyCommand,
-                         Command removeLowerKeyCommand,
-                         Command minByAgeCommand,
-                         Command filterGreaterThanTypeCommand,
-                         Command printFieldDescendingCommand) {
+    public DragonTreeMapStorage() {
+        dateOfInitialization = LocalDate.now();
+        dragonTreeMap = new TreeMap<>();
+    }
+
+
+    /*
+    public DragonTreeMapStorage(Command helpCommand,
+                                Command infoCommand,
+                                Command showCommand,
+                                Command insertCommand,
+                                Command updateCommand,
+                                Command removeKeyCommand,
+                                Command clearCommand,
+                                Command saveCommand,
+                                Command executeScriptCommand,
+                                Command exitCommand,
+                                Command removeLowerCommand,
+                                Command historyCommand,
+                                Command removeLowerKeyCommand,
+                                Command minByAgeCommand,
+                                Command filterGreaterThanTypeCommand,
+                                Command printFieldDescendingCommand) {
         help.put(helpCommand.getName(), helpCommand);
         help.put(infoCommand.getName(), infoCommand);
         help.put(showCommand.getName(), showCommand);
@@ -52,11 +59,11 @@ public class DragonTreeMapStorage implements Storage<Dragon, Integer> {
         help.put(printFieldDescendingCommand.getName(),
                 printFieldDescendingCommand);
     }
+    */
 
     @Override
     public Dragon save(Dragon entity) {
-        entity.setId(counter);
-        dragonTreeMap.put(counter++, entity);
+        dragonTreeMap.put(entity.getId(), entity);
         return entity;
     }
 
@@ -121,11 +128,11 @@ public class DragonTreeMapStorage implements Storage<Dragon, Integer> {
     }
 
     @Override
-    public void sortDragons(Comparator<Dragon> com) {
+    public List<Dragon> sortDragons(Comparator<Dragon> com) {
         List<Dragon> listHelper
                 = new ArrayList<>(dragonTreeMap.values());
         listHelper.sort(com);
-        dragons = listHelper;
+        return listHelper;
     }
 
     @Override
@@ -137,4 +144,11 @@ public class DragonTreeMapStorage implements Storage<Dragon, Integer> {
         history.offerLast(command);
     }
 
+    public LocalDate getDateOfInitialization() {
+        return dateOfInitialization;
+    }
+
+    public Map<Integer, Dragon> getDragonTreeMap() {
+        return dragonTreeMap;
+    }
 }

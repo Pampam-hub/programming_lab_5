@@ -11,5 +11,7 @@ repositories {
 
 dependencies {
 
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.12.5")
+    implementation("com.thoughtworks.xstream:xstream:1.4.19")
+
 }
+

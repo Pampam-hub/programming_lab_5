@@ -2,7 +2,7 @@ package ru.itmo.lab.service.commands;
 
 import ru.itmo.lab.repository.Storage;
 import ru.itmo.lab.service.CommandStatus;
-import ru.itmo.lab.service.validator.DragonValidator;
+import ru.itmo.lab.service.handlers.DragonValidator;
 
 
 public class InsertCommand extends Command {
@@ -15,7 +15,7 @@ public class InsertCommand extends Command {
     public CommandResult execute(Storage storage, String[] args) {
 
         try {
-            DragonValidator.validatingNumberOfArgs(args, getArgs().size());
+            DragonValidator.validateNumberOfArgs(args, getArgs().size());
             // check whether collection already has this element
             // suggest user to add
             return new CommandResult("element has been added",

@@ -1,20 +1,14 @@
-package ru.itmo.lab.repository.handlers;
+package ru.itmo.lab.service.handlers;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.security.AnyTypePermission;
 import ru.itmo.lab.entity.Dragon;
 import ru.itmo.lab.repository.Storage;
-import ru.itmo.lab.repository.factories.Factory;
-import ru.itmo.lab.repository.factories.FileDragonFactory;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 
 public class XMLReader {
@@ -31,7 +25,7 @@ public class XMLReader {
         xStream.processAnnotations(Dragon.class);
         xStream.alias("dragons", Dragon[].class);
         xStream.addPermission(AnyTypePermission.ANY);
-        System.out.println(dataXML);
+
 
         Dragon[] dragons = null;
         try {

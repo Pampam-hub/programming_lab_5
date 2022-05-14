@@ -1,4 +1,4 @@
-package ru.itmo.lab.repository.handlers;
+package ru.itmo.lab.service.handlers;
 
 
 import java.util.NoSuchElementException;
@@ -12,7 +12,6 @@ public class DragonValidator<T> {
 
     public DragonValidator(T value) {
         this.value = value;
-        string = (String) value;
     }
 
     public DragonValidator(Scanner scanner) {
@@ -20,7 +19,7 @@ public class DragonValidator<T> {
             string = scanner.nextLine();
         } catch (NoSuchElementException e) {
             System.out.println("invalid character entered");
-            System.exit(1);
+            System.exit(0);
         }
     }
 
