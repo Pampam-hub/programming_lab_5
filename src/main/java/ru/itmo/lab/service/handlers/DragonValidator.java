@@ -1,4 +1,5 @@
-package ru.itmo.lab.repository.hendlers;
+package ru.itmo.lab.repository.handlers;
+
 
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -9,25 +10,31 @@ public class DragonValidator<T> {
     private String string;
     private T value;
 
+    public DragonValidator(T value) {
+        this.value = value;
+        string = (String) value;
+    }
+
     public DragonValidator(Scanner scanner) {
         try {
-            this.string = scanner.nextLine();
-
+            string = scanner.nextLine();
         } catch (NoSuchElementException e) {
             System.out.println("invalid character entered");
             System.exit(1);
         }
     }
 
-    public static void validatingNumberOfArgs(String[] args, int numberOfArgs) {
+    
+    public static void validateNumberOfArgs(String[] args, int numberOfArgs) {
         if (args.length != numberOfArgs) {
             throw new IllegalArgumentException("wrong number of arguments, " +
                     "this command expects" + numberOfArgs + " arguments");
         }
     }
 
-    public void validatingNull (boolean nullable) {
-        if ("".equals(string)) {
+
+    public void validateNull(boolean nullable) {
+        if ("".equals(string) ) {
             if (nullable)
                 value = null;
             else
@@ -35,17 +42,25 @@ public class DragonValidator<T> {
         }
     }
 
-    public void validatingFunction(Function<String, T> function, String description) {
-        if (!"".equals(string)) {
+    public void validateValueNull(boolean nullable, String name) {
+        if (value == null ) {
+            if (!nullable)
+                throw new IllegalArgumentException(name + " can't be null");
+        }
+    }
+
+    public void validateFunction(Function<String, T> function, String description) {
+        if (!"".equals(string) ) {
             try {
                 value = function.apply(string);
             } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Error, " + description);
+                throw new IllegalArgumentException("error, " + description);
             }
         }
     }
 
-    public void  validatingPredicate(Predicate<Object> predicate, String error) {
+
+    public void validatePredicate(Predicate<Object> predicate, String error) {
         if (!"".equals(string)) {
             if (!predicate.test(value)) {
                 throw new IllegalArgumentException(error);
