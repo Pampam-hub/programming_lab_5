@@ -1,117 +1,103 @@
 package ru.itmo.lab.repository;
 
 import ru.itmo.lab.entity.Dragon;
+import ru.itmo.lab.repository.exceptions.EntityAlreadyExistsException;
 import ru.itmo.lab.repository.exceptions.EntityNotFoundException;
 import ru.itmo.lab.service.commands.Command;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class DragonTreeMapStorage implements Storage<Dragon, Integer> {
-    // подумать над айдишником
-    private final Map< Integer, Dragon > dragonTreeMap;
-    private final Map< String, Command > help = new HashMap<>();
-    private final Deque<Command> history = new ArrayDeque<>();
+    /**
+     * Счетчик id элементов, служит для обеспечения уникальности поля id у каждого элемента
+     */
+    private static Integer idCounter = 1;
+    private final Map<Integer, Dragon> dragonTreeMap;
+    private final Deque<String> history;
     private LocalDate dateOfInitialization;
+    private HashSet<String> previousFiles = new HashSet<String>();
 
     public DragonTreeMapStorage() {
         dateOfInitialization = LocalDate.now();
         dragonTreeMap = new TreeMap<>();
+        history = new ArrayDeque<>();
     }
-
-
-    /*
-    public DragonTreeMapStorage(Command helpCommand,
-                                Command infoCommand,
-                                Command showCommand,
-                                Command insertCommand,
-                                Command updateCommand,
-                                Command removeKeyCommand,
-                                Command clearCommand,
-                                Command saveCommand,
-                                Command executeScriptCommand,
-                                Command exitCommand,
-                                Command removeLowerCommand,
-                                Command historyCommand,
-                                Command removeLowerKeyCommand,
-                                Command minByAgeCommand,
-                                Command filterGreaterThanTypeCommand,
-                                Command printFieldDescendingCommand) {
-        help.put(helpCommand.getName(), helpCommand);
-        help.put(infoCommand.getName(), infoCommand);
-        help.put(showCommand.getName(), showCommand);
-        help.put(insertCommand.getName(), insertCommand);
-        help.put(updateCommand.getName(), updateCommand);
-        help.put(removeKeyCommand.getName(), removeKeyCommand);
-        help.put(clearCommand.getName(), clearCommand);
-        help.put(saveCommand.getName(), saveCommand);
-        help.put(executeScriptCommand.getName(),
-                executeScriptCommand);
-        help.put(exitCommand.getName(), exitCommand);
-        help.put(removeLowerCommand.getName(),
-                removeLowerCommand);
-        help.put(historyCommand.getName(), historyCommand);
-        help.put(removeLowerKeyCommand.getName(),
-                removeKeyCommand);
-        help.put(minByAgeCommand.getName(), minByAgeCommand);
-        help.put(filterGreaterThanTypeCommand.getName(),
-                filterGreaterThanTypeCommand);
-        help.put(printFieldDescendingCommand.getName(),
-                printFieldDescendingCommand);
-    }
-    */
 
     @Override
-    public Dragon save(Dragon entity) {
+    public void setIdCounter(Integer id) {
+        idCounter = id;
+    }
+
+    @Override
+    public void addElement(Integer id, Dragon entity)
+            throws EntityAlreadyExistsException {
+        if (dragonTreeMap.containsKey(id)) {
+            throw new EntityAlreadyExistsException(Dragon.class, id);
+        }
+        entity.setId(id);
+        entity.setCreationDate(LocalDateTime.now());
+        dragonTreeMap.put(id, entity);
+        if(id > idCounter) {
+            idCounter = ++id;
+        }
+    }
+
+    @Override
+    public void save(Dragon entity) {
+        entity.setId(idCounter++);
+        entity.setCreationDate(LocalDateTime.now());
         dragonTreeMap.put(entity.getId(), entity);
-        return entity;
     }
 
     @Override
     public Dragon read(Integer id)
             throws EntityNotFoundException {
         Dragon dragon = dragonTreeMap.get(id);
-        if(dragon == null) {
+        if (dragon == null) {
             throw new EntityNotFoundException(Dragon.class, id);
         }
         return dragon;
     }
 
     @Override
-    public Dragon update(Integer id, Dragon entity)
+    public void update(Integer id, Dragon entity)
             throws EntityNotFoundException {
-        if(!dragonTreeMap.containsKey(id)) {
+        if (!dragonTreeMap.containsKey(id)) {
             throw new EntityNotFoundException(Dragon.class, id);
         }
+        entity.setId(idCounter++);
+        entity.setCreationDate(LocalDateTime.now());
         dragonTreeMap.replace(id, entity);
-        return dragonTreeMap.get(id);
     }
 
     @Override
-    public boolean remove(Integer id)
-            throws EntityNotFoundException{
-        if(!dragonTreeMap.containsKey(id)) {
+    public void remove(Integer id)
+            throws EntityNotFoundException {
+        if (!dragonTreeMap.containsKey(id)) {
             throw new EntityNotFoundException(Dragon.class, id);
         }
         dragonTreeMap.remove(id);
-        return true;
     }
 
     @Override
-    public boolean removeLower(Integer id)
-            throws EntityNotFoundException {
-        if(!dragonTreeMap.containsKey(id)) {
-            throw new EntityNotFoundException(Dragon.class, id);
-        }
-        for(Integer i=0; i < id; i++)
+    public void removeLower(Dragon entity) {
+        entity.setId(idCounter++);
+        entity.setCreationDate(LocalDateTime.now());
+        for (Integer i = 0; i <= entity.getId(); i++)
             dragonTreeMap.remove(i);
-        return true;
     }
 
     @Override
-    public boolean removeAll() {
+    public void removeLowerKey(Integer id) {
+        for (Integer i = 0; i < id; i++)
+            dragonTreeMap.remove(i);
+    }
+
+    @Override
+    public void removeAll() {
         dragonTreeMap.clear();
-        return false;
     }
 
     @Override
@@ -124,7 +110,7 @@ public class DragonTreeMapStorage implements Storage<Dragon, Integer> {
         List<Dragon> listHelper
                 = new ArrayList<>(dragonTreeMap.values());
         listHelper.sort(com);
-        return listHelper.get(listHelper.size()-1);
+        return listHelper.get(listHelper.size() - 1);
     }
 
     @Override
@@ -136,19 +122,32 @@ public class DragonTreeMapStorage implements Storage<Dragon, Integer> {
     }
 
     @Override
-    public void addHistory(Command command) {
+    public void fillHistory(Command command) {
         int numElements = 12;
-        if(history.size() == numElements) {
+        if (history.size() == numElements) {
             history.removeFirst();
         }
-        history.offerLast(command);
+        history.offerLast(command.getName());
     }
 
-    public LocalDate getDateOfInitialization() {
-        return dateOfInitialization;
+    @Override
+    public Deque<String> getHistory() {
+        return history;
     }
 
-    public Map<Integer, Dragon> getDragonTreeMap() {
-        return dragonTreeMap;
+    @Override
+    public HashSet<String> getPreviousFiles() {
+        return previousFiles;
     }
+
+    @Override
+    public String getInfo() {
+        final int sizeOfDragon = 25;
+        final int sizeOfDragons = 16;
+        return "Collection type: " + dragonTreeMap.getClass().toString().substring(sizeOfDragons) +
+                ", elements type: " + Dragon.class.toString().substring(sizeOfDragon) + ", data of " +
+                "initialisation: " + dateOfInitialization + ", number of elements: " +
+                dragonTreeMap.size();
+    }
+
 }

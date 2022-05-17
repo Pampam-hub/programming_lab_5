@@ -1,7 +1,12 @@
 package ru.itmo.lab.service.commands;
 
 import ru.itmo.lab.repository.Storage;
-import ru.itmo.lab.service.CommandStatus;
+import ru.itmo.lab.repository.exceptions.EntityAlreadyExistsException;
+import ru.itmo.lab.repository.factories.ConsoleDragonFactory;
+import ru.itmo.lab.repository.factories.ScriptDragonFactory;
+import ru.itmo.lab.service.commandresult.CommandResult;
+import ru.itmo.lab.service.commandresult.CommandResultBuilder;
+import ru.itmo.lab.service.commandresult.CommandStatus;
 import ru.itmo.lab.service.handlers.DragonValidator;
 
 
@@ -16,12 +21,22 @@ public class InsertCommand extends Command {
 
         try {
             DragonValidator.validateNumberOfArgs(args, getArgs().size());
-            // check whether collection already has this element
-            // suggest user to add
-            return new CommandResult("element has been added",
-                    CommandStatus.SUCCESSFUL);
-        } catch (IllegalArgumentException e) {
-            return new CommandResult(e.getMessage(), CommandStatus.UNSUCCESSFUL);
+            if(isExecutedScript()) {
+                ScriptDragonFactory scriptDragonFactory = new ScriptDragonFactory(getScanner());
+                scriptDragonFactory.generateDragonData();
+                storage.addElement(Integer.parseInt(args[0]), scriptDragonFactory.getDragon());
+            } else {
+                ConsoleDragonFactory consoleDragonFactory = new ConsoleDragonFactory();
+                consoleDragonFactory.generateDragonData();
+                storage.addElement(Integer.parseInt(args[0]), consoleDragonFactory.getDragon());
+            }
+            return new CommandResultBuilder()
+                    .setMessage("Element has been added")
+                    .setStatus(CommandStatus.SUCCESSFUL).build();
+        } catch (IllegalArgumentException | EntityAlreadyExistsException e) {
+            return new CommandResultBuilder()
+                    .setMessage(e.getMessage())
+                    .setStatus(CommandStatus.UNSUCCESSFUL).build();
         }
     }
 }

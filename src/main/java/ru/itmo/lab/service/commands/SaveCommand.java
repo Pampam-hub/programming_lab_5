@@ -1,8 +1,13 @@
 package ru.itmo.lab.service.commands;
 
 import ru.itmo.lab.repository.Storage;
-import ru.itmo.lab.service.CommandStatus;
+import ru.itmo.lab.service.commandresult.CommandResult;
+import ru.itmo.lab.service.commandresult.CommandResultBuilder;
+import ru.itmo.lab.service.commandresult.CommandStatus;
 import ru.itmo.lab.service.handlers.DragonValidator;
+import ru.itmo.lab.service.handlers.XMLWriter;
+
+import java.io.IOException;
 
 
 public class SaveCommand extends Command {
@@ -14,11 +19,15 @@ public class SaveCommand extends Command {
     @Override
     public CommandResult execute(Storage storage, String[] args) {
         try {
-            DragonValidator.validateNumberOfArgs(args, getArgs().size());
-            return new CommandResult("collection has been saved",
-                    CommandStatus.SUCCESSFUL);
-        } catch (IllegalArgumentException e) {
-            return new CommandResult(e.getMessage(), CommandStatus.UNSUCCESSFUL);
+            DragonValidator.validateNumberOfArgs(args, 0);
+            XMLWriter.writeToXML(storage.readAll());
+            return new CommandResultBuilder()
+                    .setMessage("Collection has been saved")
+                    .setStatus(CommandStatus.SUCCESSFUL).build();
+        } catch (IllegalArgumentException | IOException e) {
+            return new CommandResultBuilder()
+                    .setMessage(e.getMessage())
+                    .setStatus(CommandStatus.UNSUCCESSFUL).build();
         }
 
     }

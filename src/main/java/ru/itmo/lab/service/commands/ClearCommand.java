@@ -1,7 +1,9 @@
 package ru.itmo.lab.service.commands;
 
 import ru.itmo.lab.repository.Storage;
-import ru.itmo.lab.service.CommandStatus;
+import ru.itmo.lab.service.commandresult.CommandResult;
+import ru.itmo.lab.service.commandresult.CommandResultBuilder;
+import ru.itmo.lab.service.commandresult.CommandStatus;
 import ru.itmo.lab.service.handlers.DragonValidator;
 
 
@@ -14,11 +16,15 @@ public class ClearCommand extends Command {
     @Override
     public CommandResult execute(Storage storage, String[] args) {
         try {
-            DragonValidator.validateNumberOfArgs(args, getArgs().size());
+            DragonValidator.validateNumberOfArgs(args, 0);
             storage.removeAll();
-            return new CommandResult("collection has been cleared", CommandStatus.SUCCESSFUL);
+            return new CommandResultBuilder()
+                    .setMessage("Collection has been cleared")
+                    .setStatus(CommandStatus.SUCCESSFUL).build();
         } catch (IllegalArgumentException e) {
-            return new CommandResult(e.getMessage(), CommandStatus.UNSUCCESSFUL);
+            return new CommandResultBuilder()
+                    .setMessage(e.getMessage())
+                    .setStatus(CommandStatus.UNSUCCESSFUL).build();
         }
     }
 }

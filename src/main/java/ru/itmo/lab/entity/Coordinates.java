@@ -10,7 +10,6 @@ public class Coordinates {
 
     private float y;
 
-    
     public long getX() {
         return x;
     }

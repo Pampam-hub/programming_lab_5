@@ -1,7 +1,9 @@
 package ru.itmo.lab.service.commands;
 
 import ru.itmo.lab.repository.Storage;
-import ru.itmo.lab.service.CommandStatus;
+import ru.itmo.lab.service.commandresult.CommandResult;
+import ru.itmo.lab.service.commandresult.CommandResultBuilder;
+import ru.itmo.lab.service.commandresult.CommandStatus;
 import ru.itmo.lab.service.handlers.DragonValidator;
 
 
@@ -14,11 +16,15 @@ public class ExitCommand extends Command {
     @Override
     public CommandResult execute(Storage storage, String[] args) {
         try {
-            DragonValidator.validateNumberOfArgs(args, getArgs().size());
-            return new CommandResult("completion the program",
-                    CommandStatus.SUCCESSFUL);
+            DragonValidator.validateNumberOfArgs(args, 0);
+            return new CommandResultBuilder()
+                    .setMessage("Completion the program")
+                    .setStatus(CommandStatus.SUCCESSFUL)
+                    .setExit().build();
         } catch (IllegalArgumentException e) {
-            return new CommandResult(e.getMessage(), CommandStatus.UNSUCCESSFUL);
+            return new CommandResultBuilder()
+                    .setMessage(e.getMessage())
+                    .setStatus(CommandStatus.UNSUCCESSFUL).build();
         }
     }
 }

@@ -1,4 +1,4 @@
-package ru.itmo.lab.service;
+package ru.itmo.lab.service.commandresult;
 
 public enum CommandStatus {
     SUCCESSFUL,

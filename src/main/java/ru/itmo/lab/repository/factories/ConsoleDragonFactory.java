@@ -1,16 +1,18 @@
 package ru.itmo.lab.repository.factories;
 
 import ru.itmo.lab.entity.*;
+import ru.itmo.lab.service.commands.Command;
 import ru.itmo.lab.service.handlers.DragonValidator;
 
 import java.util.Scanner;
 
 public class ConsoleDragonFactory implements Factory {
     private Dragon dragon;
-    private Scanner scanner;
+    private Coordinates coordinates = new Coordinates();
 
-    public ConsoleDragonFactory(Scanner scanner) {
-        this.scanner = scanner;
+    private Scanner scanner = Command.getScanner();
+
+    public ConsoleDragonFactory() {
         dragon = new Dragon();
     }
 
@@ -20,8 +22,7 @@ public class ConsoleDragonFactory implements Factory {
         setValue("Enter x coordinate, value must be an integer", this::setX);
         setValue("Enter y coordinate, value must be a number", this::setY);
         setValue("Enter dragon age, value must be a positive number", this::setAge);
-        setValue("Enter dragon wingspan, value must be an integer positive " +
-                "number, if you want to leave this field null - press enter", this::setWingspan);
+        setValue("Enter dragon wingspan, value must be an integer positive ", this::setWingspan);
         setValue("Enter dragon type, available values: " +
                 DragonType.show(), this::setDragonType);
         setValue("Enter dragon character, available values: " +
@@ -38,7 +39,7 @@ public class ConsoleDragonFactory implements Factory {
                 runnable.run();
                 isRunning = false;
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage() + "repeat input");
+                System.out.println(e.getMessage() + ", repeat input");
             }
 
         }
@@ -55,9 +56,8 @@ public class ConsoleDragonFactory implements Factory {
         dragonValidator.validateNull(false);
         dragonValidator.validateFunction(Long::parseLong,
                 "value of x must be an integer");
-        Coordinates coordinates = dragon.getCoordinates();
+
         coordinates.setX(dragonValidator.getValue());
-        dragon.setCoordinates(coordinates);
     }
 
     void setY() throws IllegalArgumentException {
@@ -65,7 +65,6 @@ public class ConsoleDragonFactory implements Factory {
         dragonValidator.validateNull(false);
         dragonValidator.validateFunction(Float::parseFloat,
                 "value of y must be a number");
-        Coordinates coordinates = dragon.getCoordinates();
         coordinates.setY(dragonValidator.getValue());
         dragon.setCoordinates(coordinates);
     }
@@ -102,7 +101,7 @@ public class ConsoleDragonFactory implements Factory {
         DragonValidator<DragonCharacter> dragonValidator = new DragonValidator<>(scanner);
         dragonValidator.validateNull(false);
         dragonValidator.validateFunction(DragonCharacter::valueOf, "value of dragon character " +
-                "must be from list " + DragonType.show() + " letter case must be the same");
+                "must be from list " + DragonCharacter.show() + " letter case must be the same");
         dragon.setCharacter(dragonValidator.getValue());
     }
 
@@ -111,14 +110,16 @@ public class ConsoleDragonFactory implements Factory {
         dragonValidator.validateNull(true);
         dragonValidator.validateFunction(Double::parseDouble, "count of dragon eyes " +
                 "must be a number ");
-        dragonValidator.validatePredicate(arg -> (int) arg > 0,
+        dragonValidator.validatePredicate(arg -> (double) arg > 0,
                 "count of eyes must be a positive");
-        DragonHead dragonHead = dragon.getDragonHead();
-        dragonHead.setEyesCount(dragonValidator.getValue());
-        dragon.setDragonHead(dragonHead);
+        if(dragonValidator.getValue() != null) {
+            DragonHead dragonHead = new DragonHead();
+            dragonHead.setEyesCount(dragonValidator.getValue());
+            dragon.setDragonHead(dragonHead);
+        }
     }
 
-    Dragon getDragon() {
+    public Dragon getDragon() {
         return dragon;
     }
 

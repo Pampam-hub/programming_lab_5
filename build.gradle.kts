@@ -15,3 +15,9 @@ dependencies {
 
 }
 
+jar {
+    manifest {
+        attributes("Main-Class": "ru.itmo.service.Application")
+    }
+}
+

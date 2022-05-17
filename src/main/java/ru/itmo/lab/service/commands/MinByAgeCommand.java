@@ -1,7 +1,11 @@
 package ru.itmo.lab.service.commands;
 
+import ru.itmo.lab.entity.Dragon;
 import ru.itmo.lab.repository.Storage;
-import ru.itmo.lab.service.CommandStatus;
+import ru.itmo.lab.repository.comparators.DragonAgeComparator;
+import ru.itmo.lab.service.commandresult.CommandResult;
+import ru.itmo.lab.service.commandresult.CommandResultBuilder;
+import ru.itmo.lab.service.commandresult.CommandStatus;
 import ru.itmo.lab.service.handlers.DragonValidator;
 
 public class MinByAgeCommand extends Command {
@@ -13,12 +17,18 @@ public class MinByAgeCommand extends Command {
     @Override
     public CommandResult execute(Storage storage, String[] args) {
         try {
-            DragonValidator.validateNumberOfArgs(args, getArgs().size());
-            storage.readAll();
-            return new CommandResult("here element with the smallest age",
-                    CommandStatus.SUCCESSFUL);
+            DragonValidator.validateNumberOfArgs(args, 0);
+            Dragon dragon = (Dragon) storage.min(new DragonAgeComparator());
+            CommandResult commandResult = new CommandResultBuilder()
+                    .setMessage("Here element with the smallest age")
+                    .setStatus(CommandStatus.SUCCESSFUL)
+                    .setDragon(dragon).build();
+
+            return commandResult;
         } catch (IllegalArgumentException e) {
-            return new CommandResult(e.getMessage(), CommandStatus.UNSUCCESSFUL);
+            return new CommandResultBuilder()
+                    .setMessage(e.getMessage())
+                    .setStatus(CommandStatus.UNSUCCESSFUL).build();
         }
     }
 }

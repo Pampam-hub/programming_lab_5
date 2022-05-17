@@ -10,6 +10,10 @@ public class DragonValidator<T> {
     private String string;
     private T value;
 
+    public DragonValidator(String string, T value) {
+        this.string = string;
+    }
+
     public DragonValidator(T value) {
         this.value = value;
     }
@@ -18,16 +22,15 @@ public class DragonValidator<T> {
         try {
             string = scanner.nextLine();
         } catch (NoSuchElementException e) {
-            System.out.println("invalid character entered");
+            System.out.println("\nInvalid character entered");
             System.exit(0);
         }
     }
 
-    
     public static void validateNumberOfArgs(String[] args, int numberOfArgs) {
         if (args.length != numberOfArgs) {
-            throw new IllegalArgumentException("wrong number of arguments, " +
-                    "this command expects" + numberOfArgs + " arguments");
+            throw new IllegalArgumentException("\nWrong number of arguments, " +
+                    "this command expects " + numberOfArgs + " arguments");
         }
     }
 
@@ -37,12 +40,12 @@ public class DragonValidator<T> {
             if (nullable)
                 value = null;
             else
-                throw new IllegalArgumentException("value can't be null");
+                throw new IllegalArgumentException("\nValue can't be null");
         }
     }
 
     public void validateValueNull(boolean nullable, String name) {
-        if (value == null ) {
+        if (value == null) {
             if (!nullable)
                 throw new IllegalArgumentException(name + " can't be null");
         }
@@ -53,11 +56,10 @@ public class DragonValidator<T> {
             try {
                 value = function.apply(string);
             } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("error, " + description);
+                throw new IllegalArgumentException("\nError, " + description);
             }
         }
     }
-
 
     public void validatePredicate(Predicate<Object> predicate, String error) {
         if (!"".equals(string)) {
@@ -68,7 +70,7 @@ public class DragonValidator<T> {
     }
 
     public T getValue() {
-        if (value.getClass().equals(String.class) && !"".equals(string)) {
+        if (value == null && !"".equals(string)) {
             value = (T) string;
         }
         return value;

@@ -25,9 +25,9 @@ public class FileChecker {
         }
     }
 
-    static void fileIsCorrect(Dragon[] dragons) {
+    static Integer fileIsCorrect(Dragon[] dragons) {
         List<Integer> ids = new ArrayList<>();
-        int maxId = -1;
+        Integer maxId = -1;
 
         for (Dragon dragon : dragons) {
             try {
@@ -47,7 +47,7 @@ public class FileChecker {
             }
         }
 
-        dragons[0].setIdCounter(++maxId);
+        return ++maxId;
 
 
     }

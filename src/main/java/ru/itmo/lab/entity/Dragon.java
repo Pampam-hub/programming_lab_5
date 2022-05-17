@@ -1,6 +1,7 @@
 package ru.itmo.lab.entity;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import ru.itmo.lab.repository.DragonTreeMapStorage;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +18,6 @@ public class Dragon {
     @XStreamAlias("coordinates")
     private Coordinates coordinates;
     // Поле не может быть null, значение генерируется автоматически
-
     @XStreamAlias("creationDate")
     private java.time.LocalDateTime creationDate;
     // Значение поля > 0, поле не может быть null
@@ -34,24 +34,10 @@ public class Dragon {
     private DragonCharacter dragonCharacter;
     @XStreamAlias("dragonHead")
     private DragonHead dragonHead;
-    /**
-     * Счетчик id элементов, служит для обеспечения уникальности поля id у каждого элемента
-     */
-    private static Integer idCounter = 1;
 
-    public Dragon() {
-        setId();
-        creationDate = LocalDateTime.now();
+    public void setId(Integer id) {
+        this.id = id;
     }
-    public Dragon(String name, Integer age) {
-        this.name = name;
-        this.age = age;
-    }
-
-    public void setId() {
-        this.id = idCounter++;
-    }
-
     /**
      * Метод, возвращающий значение поля id у текущего элемента коллекции
      *
@@ -59,14 +45,6 @@ public class Dragon {
      */
     public Integer getId() {
         return id;
-    }
-
-    public Integer getIdCounter() {
-        return idCounter;
-    }
-
-    public void setIdCounter(Integer id) {
-        idCounter = id;
     }
 
     public String getName() {
@@ -139,16 +117,15 @@ public class Dragon {
 
     @Override
     public String toString() {
-        return "Dragon{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+        return "Dragon{  " +
+                "id: " + id +
+                ", name: '" + name + '\'' +
                 ", " + coordinates +
-                ", creationDate=" + creationDate +
-                ", age=" + age +
-                ", wingspan=" + wingspan +
-                ", type=" + type +
-                ", dragonCharacter=" + dragonCharacter +
-                ", " + dragonHead +
-                '}';
+                ", creationDate: " + creationDate +
+                ", age: " + age +
+                ", wingspan: " + wingspan +
+                ", type: " + type +
+                ", dragonCharacter: " + dragonCharacter +
+                ", " + dragonHead + "}";
     }
 }
