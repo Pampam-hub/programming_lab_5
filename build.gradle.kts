@@ -1,6 +1,8 @@
 plugins {
     java
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
+
 
 group = "ru.itmo.lab"
 version = "1"
@@ -15,9 +17,7 @@ dependencies {
 
 }
 
-jar {
-    manifest {
-        attributes("Main-Class": "ru.itmo.service.Application")
-    }
+tasks.withType<Jar> {
+    manifest.attributes["Main-Class"] = "ru.itmo.lab.Application"
+    manifest.attributes["Class-Path"] = configurations.compileClasspath.get().joinToString(separator = " "){it.name}
 }
-
