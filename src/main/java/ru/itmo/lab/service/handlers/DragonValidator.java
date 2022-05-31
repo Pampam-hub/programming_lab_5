@@ -34,6 +34,7 @@ public class DragonValidator<T> {
         }
     }
 
+//    public static void validateId(Str)
 
     public void validateNull(boolean nullable) {
         if ("".equals(string) ) {
@@ -56,7 +57,7 @@ public class DragonValidator<T> {
             try {
                 value = function.apply(string);
             } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("\nError, " + description);
+                throw new IllegalArgumentException("\n" + description);
             }
         }
     }

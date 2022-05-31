@@ -2,6 +2,7 @@ package ru.itmo.lab.service.handlers;
 
 import ru.itmo.lab.repository.Storage;
 import ru.itmo.lab.repository.exceptions.EntityNotFoundException;
+import ru.itmo.lab.service.OutputMessage;
 import ru.itmo.lab.service.commands.Command;
 import ru.itmo.lab.service.commandresult.CommandResult;
 
@@ -62,7 +63,7 @@ public class CommandExecutor {
                 System.exit(0);
             }
         } else {
-            System.out.println("\nThere is no such command, for reference, enter command \"help\" ");
+            OutputMessage.printErrorMessage("\nThere is no such command, for reference, enter command \"help\" ");
         }
 
         return commandResult;

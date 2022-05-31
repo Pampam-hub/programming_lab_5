@@ -1,6 +1,5 @@
 package ru.itmo.lab.entity;
 
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("coordinates")

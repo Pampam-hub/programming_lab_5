@@ -1,10 +1,8 @@
 package ru.itmo.lab.entity;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import ru.itmo.lab.repository.DragonTreeMapStorage;
 
 import java.time.LocalDateTime;
-
 
 @XStreamAlias("dragon")
 public class Dragon {
@@ -117,7 +115,7 @@ public class Dragon {
 
     @Override
     public String toString() {
-        return "Dragon{  " +
+        return "Dragon{ " +
                 "id: " + id +
                 ", name: '" + name + '\'' +
                 ", " + coordinates +
@@ -126,6 +124,6 @@ public class Dragon {
                 ", wingspan: " + wingspan +
                 ", type: " + type +
                 ", dragonCharacter: " + dragonCharacter +
-                ", " + dragonHead + "}";
+                ", " + dragonHead + " }";
     }
 }

@@ -11,6 +11,8 @@ public enum DragonCharacter {
             dragonCharacters.append(character);
             dragonCharacters.append(", ");
         }
+        dragonCharacters.deleteCharAt(dragonCharacters.length()-1);
+        dragonCharacters.deleteCharAt(dragonCharacters.length()-1);
         return dragonCharacters;
     }
 }

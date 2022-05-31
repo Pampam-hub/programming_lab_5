@@ -14,6 +14,7 @@ public class ScriptReader {
         if (storage.getPreviousFiles().contains(file)) {
             throw new IllegalArgumentException("Possible looping");
         }
+        storage.addPreviousFiles(file);
         Scanner scanner = new Scanner(new BufferedInputStream(new FileInputStream(file)));
         Command.setScanner(scanner);
         CommandExecutor commandExecutor = ConsoleReader.getCommandExecutor();

@@ -17,7 +17,7 @@ public class DragonTreeMapStorage implements Storage<Dragon, Integer> {
     private final Map<Integer, Dragon> dragonTreeMap;
     private final Deque<String> history;
     private LocalDate dateOfInitialization;
-    private HashSet<String> previousFiles = new HashSet<String>();
+    private HashSet<String> previousFiles = new HashSet<>();
 
     public DragonTreeMapStorage() {
         dateOfInitialization = LocalDate.now();
@@ -46,8 +46,10 @@ public class DragonTreeMapStorage implements Storage<Dragon, Integer> {
 
     @Override
     public void save(Dragon entity) {
-        entity.setId(idCounter++);
-        entity.setCreationDate(LocalDateTime.now());
+        if(entity.getId() == null) {
+            entity.setId(idCounter++);
+            entity.setCreationDate(LocalDateTime.now());
+        }
         dragonTreeMap.put(entity.getId(), entity);
     }
 
@@ -128,6 +130,16 @@ public class DragonTreeMapStorage implements Storage<Dragon, Integer> {
             history.removeFirst();
         }
         history.offerLast(command.getName());
+    }
+
+    @Override
+    public void addPreviousFiles(String file) {
+        this.previousFiles.add(file) ;
+    }
+
+    @Override
+    public void deleteFromPreviousFiles(String file) {
+        this.previousFiles.remove(file);
     }
 
     @Override

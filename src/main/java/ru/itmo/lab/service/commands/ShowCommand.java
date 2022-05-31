@@ -21,7 +21,7 @@ public class ShowCommand extends Command {
         try {
             DragonValidator.validateNumberOfArgs(args, 0);
             CommandResult commandResult = new CommandResultBuilder()
-                    .setMessage("Here your collection")
+                    .setMessage("Here your collection:")
                     .setStatus(CommandStatus.SUCCESSFUL)
                     .setListOfDragons(storage.readAll()).build();
 

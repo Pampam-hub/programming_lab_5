@@ -21,6 +21,7 @@ public class InsertCommand extends Command {
 
         try {
             DragonValidator.validateNumberOfArgs(args, getArgs().size());
+
             if(isExecutedScript()) {
                 ScriptDragonFactory scriptDragonFactory = new ScriptDragonFactory(getScanner());
                 scriptDragonFactory.generateDragonData();

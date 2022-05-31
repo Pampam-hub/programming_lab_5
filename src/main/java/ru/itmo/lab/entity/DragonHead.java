@@ -1,7 +1,6 @@
 package ru.itmo.lab.entity;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 @XStreamAlias("dragonHead")
 public class DragonHead {

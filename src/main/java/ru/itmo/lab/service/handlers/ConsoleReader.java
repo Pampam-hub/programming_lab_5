@@ -25,7 +25,7 @@ public class ConsoleReader {
         Command.setScanner(scanner);
         while(true) {
             try {
-                System.out.println("Enter command, please");
+                System.out.println("\nEnter command, please");
                 String line = scanner.nextLine();
                 commandExecutor.executeCommand(storage, line);
             } catch(NoSuchElementException e) {

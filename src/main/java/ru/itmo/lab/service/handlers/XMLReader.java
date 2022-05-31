@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.security.AnyTypePermission;
 import ru.itmo.lab.entity.Dragon;
 import ru.itmo.lab.repository.Storage;
+import ru.itmo.lab.service.OutputMessage;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -35,10 +36,10 @@ public class XMLReader {
             idHelper = FileChecker.fileIsCorrect(dragons);
             storage.setIdCounter(idHelper);
         } catch (ConversionException e) {
-            System.out.println("\nCan't parse file, data is incorrect");
+            OutputMessage.printErrorMessage("\nCan't parse file, data is incorrect");
             System.exit(0);
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            OutputMessage.printErrorMessage(e.getMessage());
             System.exit(0);
         }
 

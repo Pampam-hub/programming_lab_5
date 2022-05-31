@@ -25,6 +25,8 @@ public interface Storage<T, U> {
     T min(Comparator< Dragon> com);
     List<T> sortDragons(Comparator<Dragon> com);
     void fillHistory(Command command);
+    void addPreviousFiles(String file);
+    void deleteFromPreviousFiles(String file);
     Deque<String> getHistory();
     HashSet<String> getPreviousFiles();
     String getInfo();

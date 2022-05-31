@@ -9,3 +9,5 @@ hfweb
 2
 WATER
 GOOD
+execute_script script1.txt
+exit

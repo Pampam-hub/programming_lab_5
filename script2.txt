@@ -1,0 +1,3 @@
+min_by_age
+execute_script script.txt
+exit

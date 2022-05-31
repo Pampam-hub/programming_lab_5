@@ -28,8 +28,9 @@ public class ExecuteScriptCommand extends Command {
             ScriptReader scriptReader = new ScriptReader();
             scriptReader.readScript(storage, file);
             setExecutedScript(false);
+            storage.deleteFromPreviousFiles(file);
             return new CommandResultBuilder()
-                    .setMessage("Script has been executed")
+                    .setMessage("Script \"" +  file + "\" has been executed")
                     .setStatus(CommandStatus.SUCCESSFUL).build();
         } catch(IllegalArgumentException | FileNotFoundException e) {
             setExecutedScript(false);

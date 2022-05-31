@@ -1,6 +1,7 @@
 package ru.itmo.lab.repository.factories;
 
 import ru.itmo.lab.entity.*;
+import ru.itmo.lab.service.OutputMessage;
 import ru.itmo.lab.service.commands.Command;
 import ru.itmo.lab.service.handlers.DragonValidator;
 
@@ -39,7 +40,7 @@ public class ConsoleDragonFactory implements Factory {
                 runnable.run();
                 isRunning = false;
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage() + ", repeat input");
+                OutputMessage.printErrorMessage(e.getMessage() + ", repeat input");
             }
 
         }
